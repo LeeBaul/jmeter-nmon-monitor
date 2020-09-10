@@ -1,9 +1,0 @@
-com\libaolu\nmon\sampler\NmonFileAnalyseSampler.class
-com\libaolu\nmon\utils\AvgDataTag.class
-com\libaolu\nmon\control\gui\NmonFileAnalyseSamplerGui.class
-com\libaolu\nmon\sampler\NmonConfigExecuteSampler.class
-com\libaolu\nmon\control\gui\NmonConfigExecuteSamplerGui.class
-com\libaolu\nmon\utils\DateUtils.class
-com\libaolu\nmon\utils\Base64Util.class
-com\libaolu\nmon\utils\RsaUtil.class
-com\libaolu\nmon\utils\LeeUtils.class
