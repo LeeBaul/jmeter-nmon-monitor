@@ -227,7 +227,7 @@
                     <!--<inFilter>com/libaolu/nmon/**</inFilter>-->
 
                     <!-- 对什么东西进行加载，这里仅有classes成功，毕竟你也不可能对配置文件及JSP混淆吧-->
-                    <injar>classes</injar>
+                   <!-- <injar>classes</injar>-->
                 </configuration>
 
                 <dependencies>
