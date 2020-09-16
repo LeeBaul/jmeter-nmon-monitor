@@ -8,6 +8,7 @@ import com.libaolu.nmon.utils.Base64Util;
 import com.libaolu.nmon.utils.DateUtils;
 import com.libaolu.nmon.utils.LeeUtils;
 import com.libaolu.nmon.utils.RsaUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jmeter.samplers.AbstractSampler;
 import org.apache.jmeter.samplers.Entry;
 import org.apache.jmeter.samplers.SampleResult;
@@ -45,9 +46,10 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
     @Override
     public SampleResult sample(Entry entry) {
         LeeUtils agr = new LeeUtils();
-        if (JMeterUtils.getProperty("SYSTEM_BANNER") == null){
+        String pluginsShow = JMeterUtils.getProperty("baolu-jmeter-plugins");
+        if (StringUtils.isEmpty(pluginsShow)){
             log.info("{}",agr.displayAsciiArt());
-            JMeterUtils.setProperty("SYSTEM_BANNER","false");
+            JMeterUtils.setProperty("baolu-jmeter-plugins","show");
         }
         String tmpStr = null;
         String lastTime;
