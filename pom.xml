@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.libaolu.jmeter.nmon</groupId>
-    <artifactId>jmeter-nmon-monitor</artifactId>
-    <version>2.1.0</version>
+    <artifactId>baolu-nmon-monitor</artifactId>
+    <version>2.1.1</version>
 
     <packaging>jar</packaging>
-    <name>JMeterNmonMonitor</name>
+    <name>baolu-nmon-monitor</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
