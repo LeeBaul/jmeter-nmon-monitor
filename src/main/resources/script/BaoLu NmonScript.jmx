@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.4.3">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="setUp Thread Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </SetupThreadGroup>
+      <hashTree>
+        <com.libaolu.nmon.sampler.NmonConfigExecuteSampler guiclass="com.libaolu.nmon.control.gui.NmonConfigExecuteSamplerGui" testclass="com.libaolu.nmon.sampler.NmonConfigExecuteSampler" testname="BaoLu NmonConfigExecute" enabled="true">
+          <boolProp name="NmonConfigExecuteSampler.isSlaveStart">false</boolProp>
+          <stringProp name="NmonConfigExecuteSampler.note">1.本采样器必须放置setUp Thread Group中，单线执行1次
+2.确保被监控服务器上可以正常NMON，Linux操作系统可执行NMON文件，须放置当前登录用户目录
+3.采样间隔、持续时间尽量采用整数型，生成文件名禁用中文
+4.配置信息中必须使用ip,user,pwd,serverType格式，多台配置信息之间使用回车键分开，其中serverType可填Linux、AIX
+5.JMeter压测采用非分布式模式，执行机IP填写本机ip，最终分析结果本机查看
+6.JMeter压测采用分布式模式，执行机IP随机填写一台JMeter的slave机ip,最终分析结果执行机IP查看</stringProp>
+          <stringProp name="NmonConfigExecuteSampler.requestData">192.168.39.134,libaolu,P@ssw1rd,linux</stringProp>
+          <stringProp name="NmonConfigExecuteSampler.interval">5</stringProp>
+          <stringProp name="NmonConfigExecuteSampler.hold">1</stringProp>
+          <stringProp name="NmonConfigExecuteSampler.fileName">libaolu</stringProp>
+          <stringProp name="NmonConfigExecuteSampler.masterIp">${__machineIP()}</stringProp>
+        </com.libaolu.nmon.sampler.NmonConfigExecuteSampler>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <intProp name="LoopController.loops">-1</intProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <stringProp name="ThreadGroup.duration">60</stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="Java Request" enabled="true">
+          <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="Sleep_Time" elementType="Argument">
+                <stringProp name="Argument.name">Sleep_Time</stringProp>
+                <stringProp name="Argument.value">100</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="Sleep_Mask" elementType="Argument">
+                <stringProp name="Argument.name">Sleep_Mask</stringProp>
+                <stringProp name="Argument.value">0xFF</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="Label" elementType="Argument">
+                <stringProp name="Argument.name">Label</stringProp>
+                <stringProp name="Argument.value"></stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="ResponseCode" elementType="Argument">
+                <stringProp name="Argument.name">ResponseCode</stringProp>
+                <stringProp name="Argument.value"></stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="ResponseMessage" elementType="Argument">
+                <stringProp name="Argument.name">ResponseMessage</stringProp>
+                <stringProp name="Argument.value"></stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="Status" elementType="Argument">
+                <stringProp name="Argument.name">Status</stringProp>
+                <stringProp name="Argument.value">OK</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="SamplerData" elementType="Argument">
+                <stringProp name="Argument.name">SamplerData</stringProp>
+                <stringProp name="Argument.value"></stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="ResultData" elementType="Argument">
+                <stringProp name="Argument.name">ResultData</stringProp>
+                <stringProp name="Argument.value"></stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="classname">org.apache.jmeter.protocol.java.test.JavaTest</stringProp>
+        </JavaSampler>
+        <hashTree/>
+      </hashTree>
+      <PostThreadGroup guiclass="PostThreadGroupGui" testclass="PostThreadGroup" testname="tearDown Thread Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </PostThreadGroup>
+      <hashTree>
+        <com.libaolu.nmon.sampler.NmonFileAnalyseSampler guiclass="com.libaolu.nmon.control.gui.NmonFileAnalyseSamplerGui" testclass="com.libaolu.nmon.sampler.NmonFileAnalyseSampler" testname="BaoLu NmonFileAnalyse" enabled="true"/>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
