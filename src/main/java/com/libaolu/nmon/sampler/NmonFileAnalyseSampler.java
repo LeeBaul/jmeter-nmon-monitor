@@ -46,32 +46,27 @@ public class NmonFileAnalyseSampler extends AbstractSampler implements TestState
 
     @Override
     public void testEnded() {
-        String expire = JMeterUtils.getProperty("JMETER_NMON_EXPIRE");
-        if ("true".equals(expire)){
-            log.error("当前版本已过期，请关注微信公众号【宝路测试手记】获取最新版本");
-        }else {
-            String if_remote_start = JMeterUtils.getProperty("IF_SLAVE_START");
-            if ("true".equals(if_remote_start)) {
-                //当前机器的ip地址，jmeterHostAddress需要提前配置在jmeter.properties配置文件中
-                String localHostIP = JMeterUtils.getLocalHostIP();
-                String nmonMasterIp = JMeterUtils.getProperty("nmonMasterIp");//获取NmonConfigExecuteSampler 设置的nmonMasterIp
-                if ("".equals(nmonMasterIp)){
-                    log.error("分布式模式下，必须设置控制机IP，请检查！");
-                }else {
-                    //当前机器IP与要执行NMON采样器的机器IP相同才会执行
-                    if (localHostIP.equals(nmonMasterIp)){
-                        tempAnalyseResult = new StringBuffer();
-                        ftpGetFileAnalyse();
-                        log.info("\n{}", tempAnalyseResult.toString());
-                        log.info("NMON文件解析结束");
-                    }
-                }
+        String if_remote_start = JMeterUtils.getProperty("IF_SLAVE_START");
+        if ("true".equals(if_remote_start)) {
+            //当前机器的ip地址，jmeterHostAddress需要提前配置在jmeter.properties配置文件中
+            String localHostIP = JMeterUtils.getLocalHostIP();
+            String nmonMasterIp = JMeterUtils.getProperty("nmonMasterIp");//获取NmonConfigExecuteSampler 设置的nmonMasterIp
+            if ("".equals(nmonMasterIp)){
+                log.error("分布式模式下，必须设置控制机IP，请检查！");
             }else {
-                tempAnalyseResult = new StringBuffer();
-                ftpGetFileAnalyse();
-                log.info("\n{}", tempAnalyseResult.toString());
-                log.info("NMON文件解析结束");
+                //当前机器IP与要执行NMON采样器的机器IP相同才会执行
+                if (localHostIP.equals(nmonMasterIp)){
+                    tempAnalyseResult = new StringBuffer();
+                    ftpGetFileAnalyse();
+                    log.info("\n{}", tempAnalyseResult.toString());
+                    log.info("NMON文件解析结束");
+                }
             }
+        }else {
+            tempAnalyseResult = new StringBuffer();
+            ftpGetFileAnalyse();
+            log.info("\n{}", tempAnalyseResult.toString());
+            log.info("NMON文件解析结束");
         }
 
     }

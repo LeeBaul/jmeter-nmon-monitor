@@ -2,12 +2,7 @@ package com.libaolu.nmon.sampler;
 
 import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.Session;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.libaolu.nmon.utils.Base64Util;
-import com.libaolu.nmon.utils.DateUtils;
 import com.libaolu.nmon.utils.LeeUtils;
-import com.libaolu.nmon.utils.RsaUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jmeter.samplers.AbstractSampler;
 import org.apache.jmeter.samplers.Entry;
@@ -50,56 +45,18 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
             log.info("{}",agr.displayAsciiArt());
             JMeterUtils.setProperty("baolu-jmeter-plugins","show");
         }
-        String tmpStr = null;
-        String lastTime;
-        String base64 = agr.getLicenseKey();
-        String tempBase64 = agr.readContent("system.lic");
-        String liaTime = agr.readContent("system.lia");
-        try {
-            tmpStr = new String(RsaUtil.decryptByPublicKey(Base64Util.decode(base64),RsaUtil.getPublicKey()),"UTF-8");
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        JSONObject json = JSON.parseObject(tmpStr);
-        if ("".equals(tempBase64) || tempBase64 == null){//首次使用时或者将文件删除后读取的内容是空
-            agr.writeContent(base64,"system.lic");//将license写入JMeter工具bin目录
-            tempBase64 = base64;//防止tempBase64.startsWith 空指针异常
-        }
-        if ("".equals(liaTime) || liaTime == null){//首次使用时或者将文件删除后读取的内容是空
-            agr.writeContent(JMeterUtils.getProperty("START.MS"),"system.lia");//上次正常云行时间
-            lastTime = DateUtils.stampToDate(Long.parseLong(JMeterUtils.getProperty("START.MS")));
-        }else {
-            lastTime = DateUtils.stampToDate(Long.parseLong(liaTime));
-        }
-
-        if (DateUtils.isExpire(json.getString("expire"))){
-            JMeterUtils.setProperty("JMETER_NMON_EXPIRE", "true");
-            log.error("当前版本已过期，请关注微信公众号【宝路测试手记】获取最新版本");
-            agr.writeContent(JMeterUtils.getJMeterCopyright(),"system.lic");
-        } else {
-            if (!DateUtils.isExpire(lastTime) && tempBase64.startsWith("Copyright")) {
-                JMeterUtils.setProperty("JMETER_NMON_EXPIRE", "true");
-                log.error("当前版本已过期，请关注微信公众号【宝路测试手记】获取最新版本");
-            }else {
-                agr.writeContent(JMeterUtils.getProperty("START.MS"),"system.lia");//上次正常云行时间
-                /*JMeterUtils.setProperty("JMETER_NMON_EXPIRE", "false");*/
-                if (tempBase64.startsWith("Copyright")){
-                    agr.writeContent(base64,"system.lic");//更新license
-                }
-                log.info("开始校验NMON参数配置");
-                if (getIsSlaveStart()) {
-                    JMeterUtils.setProperty("IF_SLAVE_START", "true");
-                    String localHostIP  = JMeterUtils.getLocalHostIP();
-                    String masterIp = getMasterIp();
-                    JMeterUtils.setProperty("nmonMasterIp", masterIp);//将masterIp 设置成属性值，供NmonFileAnalyseSampler使用
-                    if (localHostIP.equals(masterIp)){//判断GUI页面填写的MasterIp是否为本机ip
-                        finalRunCommand();
-                    }
-                } else {
-                    JMeterUtils.setProperty("IF_SLAVE_START", "false");
-                    finalRunCommand();
-                }
+        log.info("开始校验NMON参数配置");
+        if (getIsSlaveStart()) {
+            JMeterUtils.setProperty("IF_SLAVE_START", "true");
+            String localHostIP  = JMeterUtils.getLocalHostIP();
+            String masterIp = getMasterIp();
+            JMeterUtils.setProperty("nmonMasterIp", masterIp);//将masterIp 设置成属性值，供NmonFileAnalyseSampler使用
+            if (localHostIP.equals(masterIp)){//判断GUI页面填写的MasterIp是否为本机ip
+                finalRunCommand();
             }
+        } else {
+            JMeterUtils.setProperty("IF_SLAVE_START", "false");
+            finalRunCommand();
         }
         return null;// This means no sample is saved
     }
