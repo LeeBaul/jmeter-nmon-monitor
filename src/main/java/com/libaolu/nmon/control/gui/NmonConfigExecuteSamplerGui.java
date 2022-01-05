@@ -169,7 +169,7 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui {
     }
 
     public String getStaticLabel(){
-        return "NmonConfigExecute Sampler";
+        return "BaoluNmonConfigExecute";
     }
 
     @Override
