@@ -59,7 +59,7 @@ public class NmonFileAnalyseSamplerGui extends AbstractSamplerGui {
     }
 
     public String getStaticLabel() {
-        return "BaoluNmonFileAnalyse";
+        return "BaoLu NmonFileAnalyse";
     }
 
     @Override
