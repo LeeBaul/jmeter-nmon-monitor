@@ -18,6 +18,7 @@ import java.util.Properties;
 /**
  * <p/>
  * nmon文件计算分析类
+ *
  * @author libaolu
  * @version 1.0
  * @dateTime 2020/2/17 13:28
@@ -51,18 +52,18 @@ public class NmonFileAnalyseSampler extends AbstractSampler implements TestState
             //当前机器的ip地址，jmeterHostAddress需要提前配置在jmeter.properties配置文件中
             String localHostIP = JMeterUtils.getLocalHostIP();
             String nmonMasterIp = JMeterUtils.getProperty("nmonMasterIp");//获取NmonConfigExecuteSampler 设置的nmonMasterIp
-            if ("".equals(nmonMasterIp)){
+            if ("".equals(nmonMasterIp)) {
                 log.error("分布式模式下，必须设置控制机IP，请检查！");
-            }else {
+            } else {
                 //当前机器IP与要执行NMON采样器的机器IP相同才会执行
-                if (localHostIP.equals(nmonMasterIp)){
+                if (localHostIP.equals(nmonMasterIp)) {
                     tempAnalyseResult = new StringBuffer();
                     ftpGetFileAnalyse();
                     log.info("\n{}", tempAnalyseResult.toString());
                     log.info("NMON文件解析结束");
                 }
             }
-        }else {
+        } else {
             tempAnalyseResult = new StringBuffer();
             ftpGetFileAnalyse();
             log.info("\n{}", tempAnalyseResult.toString());
@@ -92,7 +93,7 @@ public class NmonFileAnalyseSampler extends AbstractSampler implements TestState
         String[] arrNmonMsg = JMeterUtils.getProperty("nmonFileNameStr").split("&@&@");
         for (String nmonMsgStr : arrNmonMsg) {
             String[] arrTemp = nmonMsgStr.split(",");
-            try{
+            try {
                 JSch jsch = new JSch();
                 session = jsch.getSession(arrTemp[1], arrTemp[0], 22);
                 session.setPassword(arrTemp[2]);
@@ -102,25 +103,25 @@ public class NmonFileAnalyseSampler extends AbstractSampler implements TestState
                 session.connect(60000);
                 Channel channel = session.openChannel("sftp");
                 channel.connect();
-                sftp = (ChannelSftp)channel;
-            }catch (JSchException e){
+                sftp = (ChannelSftp) channel;
+            } catch (JSchException e) {
                 e.printStackTrace();
             }
-            try{
+            try {
                 fileLocation = file.getPath() + File.separator + arrTemp[4];
                 assert sftp != null;
                 sftp.get(arrTemp[4], new FileOutputStream(new File(this.fileLocation)));
-            }catch (FileNotFoundException e1 ){
-                log.error("FileNotFoundException[{}]",arrTemp[4]);
+            } catch (FileNotFoundException e1) {
+                log.error("FileNotFoundException[{}]", arrTemp[4]);
                 e1.printStackTrace();
             } catch (SftpException e2) {
-                log.error("SftpException[{}]",arrTemp[4]);
+                log.error("SftpException[{}]", arrTemp[4]);
                 e2.printStackTrace();
-            }finally {
+            } finally {
                 if (sftp != null) {
                     if (sftp.isConnected()) {
                         sftp.disconnect();
-                    }else if (sftp.isClosed()) {
+                    } else if (sftp.isClosed()) {
                         log.info("stfp already closed");
                     }
                     try {
@@ -138,15 +139,15 @@ public class NmonFileAnalyseSampler extends AbstractSampler implements TestState
     }
 
     public boolean analyseLocalNmonFile(String fileName) {
-        configArea = new HashMap();
-        nmonTxxxxDataMap = new HashMap();
-        tempAnalyseResult.append(">>>>>>>>>>> " + fileName + " >>>>>>>>>>>\n");
+        configArea = new HashMap<>();
+        nmonTxxxxDataMap = new HashMap<>();
+        tempAnalyseResult.append(">>>>>>>>>>> ").append(fileName).append(" >>>>>>>>>>>\n");
         boolean conSuc = false;
         FileReader fileReader = null;
         BufferedReader bu2ferReader = null;
         String line = null;
-        new ArrayList();
-        nmonTxxxxDataMap = new HashMap();
+        new ArrayList<>();
+        nmonTxxxxDataMap = new HashMap<>();
 
         try {
             fileReader = new FileReader(fileLocation);
@@ -154,10 +155,11 @@ public class NmonFileAnalyseSampler extends AbstractSampler implements TestState
             var21.printStackTrace();
         }
 
+        assert fileReader != null;
         bu2ferReader = new BufferedReader(fileReader);
 
         try {
-            while((line = bu2ferReader.readLine()) != null) {
+            while ((line = bu2ferReader.readLine()) != null) {
                 if (!"".equals(line)) {
                     String[] cols = line.split(",");
                     ArrayList nmonTxxxxList;
@@ -165,7 +167,7 @@ public class NmonFileAnalyseSampler extends AbstractSampler implements TestState
                         if (nmonTxxxxDataMap.get("NET_HEADER") != null) {
                             (nmonTxxxxDataMap.get("NET_HEADER")).add(line);
                         } else {
-                            nmonTxxxxList = new ArrayList();
+                            nmonTxxxxList = new ArrayList<>();
                             nmonTxxxxList.add(line);
                             nmonTxxxxDataMap.put("NET_HEADER", nmonTxxxxList);
                         }
@@ -173,7 +175,7 @@ public class NmonFileAnalyseSampler extends AbstractSampler implements TestState
                         if (nmonTxxxxDataMap.get("DISKBUSY_HEADER") != null) {
                             (nmonTxxxxDataMap.get("DISKBUSY_HEADER")).add(line);
                         } else {
-                            nmonTxxxxList = new ArrayList();
+                            nmonTxxxxList = new ArrayList<>();
                             nmonTxxxxList.add(line);
                             this.nmonTxxxxDataMap.put("DISKBUSY_HEADER", nmonTxxxxList);
                         }
@@ -185,7 +187,7 @@ public class NmonFileAnalyseSampler extends AbstractSampler implements TestState
                                 if (nmonTxxxxDataMap.get(cols[0]) != null) {
                                     (nmonTxxxxDataMap.get(cols[0])).add(line);
                                 } else {
-                                    nmonTxxxxList = new ArrayList();
+                                    nmonTxxxxList = new ArrayList<>();
                                     nmonTxxxxList.add(line);
                                     nmonTxxxxDataMap.put(cols[0], nmonTxxxxList);
                                 }
@@ -195,7 +197,7 @@ public class NmonFileAnalyseSampler extends AbstractSampler implements TestState
                                 if (nmonTxxxxDataMap.get(cols[0]) != null) {
                                     (nmonTxxxxDataMap.get(cols[0])).add(line);
                                 } else {
-                                    nmonTxxxxList = new ArrayList();
+                                    nmonTxxxxList = new ArrayList<>();
                                     nmonTxxxxList.add(line);
                                     nmonTxxxxDataMap.put(cols[0], nmonTxxxxList);
                                 }
@@ -205,7 +207,7 @@ public class NmonFileAnalyseSampler extends AbstractSampler implements TestState
                                 if (nmonTxxxxDataMap.get(cols[0]) != null) {
                                     (nmonTxxxxDataMap.get(cols[0])).add(line);
                                 } else {
-                                    nmonTxxxxList = new ArrayList();
+                                    nmonTxxxxList = new ArrayList<>();
                                     nmonTxxxxList.add(line);
                                     nmonTxxxxDataMap.put(cols[0], nmonTxxxxList);
                                 }
@@ -215,7 +217,7 @@ public class NmonFileAnalyseSampler extends AbstractSampler implements TestState
                                 if (nmonTxxxxDataMap.get(cols[0]) != null) {
                                     (nmonTxxxxDataMap.get(cols[0])).add(line);
                                 } else {
-                                    nmonTxxxxList = new ArrayList();
+                                    nmonTxxxxList = new ArrayList<>();
                                     nmonTxxxxList.add(line);
                                     this.nmonTxxxxDataMap.put(cols[0], nmonTxxxxList);
                                 }
@@ -225,7 +227,7 @@ public class NmonFileAnalyseSampler extends AbstractSampler implements TestState
                                 if (nmonTxxxxDataMap.get(cols[0]) != null) {
                                     (nmonTxxxxDataMap.get(cols[0])).add(line);
                                 } else {
-                                    nmonTxxxxList = new ArrayList();
+                                    nmonTxxxxList = new ArrayList<>();
                                     nmonTxxxxList.add(line);
                                     nmonTxxxxDataMap.put(cols[0], nmonTxxxxList);
                                 }
@@ -235,7 +237,7 @@ public class NmonFileAnalyseSampler extends AbstractSampler implements TestState
                                 if (nmonTxxxxDataMap.get(cols[0]) != null) {
                                     (nmonTxxxxDataMap.get(cols[0])).add(line);
                                 } else {
-                                    nmonTxxxxList = new ArrayList();
+                                    nmonTxxxxList = new ArrayList<>();
                                     nmonTxxxxList.add(line);
                                     nmonTxxxxDataMap.put(cols[0], nmonTxxxxList);
                                 }
@@ -245,7 +247,7 @@ public class NmonFileAnalyseSampler extends AbstractSampler implements TestState
                                 if (nmonTxxxxDataMap.get(cols[0]) != null) {
                                     (nmonTxxxxDataMap.get(cols[0])).add(line);
                                 } else {
-                                    nmonTxxxxList = new ArrayList();
+                                    nmonTxxxxList = new ArrayList<>();
                                     nmonTxxxxList.add(line);
                                     nmonTxxxxDataMap.put(cols[0], nmonTxxxxList);
                                 }
@@ -255,7 +257,7 @@ public class NmonFileAnalyseSampler extends AbstractSampler implements TestState
                                 if (nmonTxxxxDataMap.get(cols[0]) != null) {
                                     (nmonTxxxxDataMap.get(cols[0])).add(line);
                                 } else {
-                                    nmonTxxxxList = new ArrayList();
+                                    nmonTxxxxList = new ArrayList<>();
                                     nmonTxxxxList.add(line);
                                     nmonTxxxxDataMap.put(cols[0], nmonTxxxxList);
                                 }
@@ -265,7 +267,7 @@ public class NmonFileAnalyseSampler extends AbstractSampler implements TestState
                                 if (nmonTxxxxDataMap.get(cols[0]) != null) {
                                     (nmonTxxxxDataMap.get(cols[0])).add(line);
                                 } else {
-                                    nmonTxxxxList = new ArrayList();
+                                    nmonTxxxxList = new ArrayList<>();
                                     nmonTxxxxList.add(line);
                                     nmonTxxxxDataMap.put(cols[0], nmonTxxxxList);
                                 }
@@ -313,31 +315,31 @@ public class NmonFileAnalyseSampler extends AbstractSampler implements TestState
     protected void fillConfigArea(String line) {
         String[] cols = line.split(",");
         HashMap var4 = configArea;
-        synchronized(configArea) {
+        synchronized (configArea) {
             ArrayList arrayRef;
             if (!configArea.containsKey(cols[0])) {
-                arrayRef = new ArrayList();
+                arrayRef = new ArrayList<>();
                 arrayRef.add(line);
                 configArea.put(cols[0], arrayRef);
             } else {
-                arrayRef = (ArrayList)configArea.get(cols[0]);
+                arrayRef = (ArrayList) configArea.get(cols[0]);
                 arrayRef.add(line);
             }
 
         }
     }
 
-    private ArrayList getConfigDataByTag(String tag){
-        synchronized(configArea){
-            ArrayList tagData = (ArrayList)configArea.get(tag);
+    private ArrayList getConfigDataByTag(String tag) {
+        synchronized (configArea) {
+            ArrayList tagData = (ArrayList) configArea.get(tag);
             return tagData;
         }
     }
 
-    private void end(){
-        this.fileLocation=null;
-        this.nmonTxxxxDataMap=null;
-        this.configArea=null;
+    private void end() {
+        this.fileLocation = null;
+        this.nmonTxxxxDataMap = null;
+        this.configArea = null;
     }
 
 }

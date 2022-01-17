@@ -16,6 +16,7 @@ public class LeeUtils {
 
     /**
      * 获取license
+     *
      * @return
      */
     public String getLicenseKey() {
@@ -51,13 +52,13 @@ public class LeeUtils {
                 String line;
                 String key = "";
                 try {
-                    while (( line = reader.readLine()) != null) {
-                        if (line.indexOf("___")>0){
-                            key += System.lineSeparator()+line+System.lineSeparator();
-                        } else if (line.indexOf("JMeter")>0){
+                    while ((line = reader.readLine()) != null) {
+                        if (line.indexOf("___") > 0) {
+                            key += System.lineSeparator() + line + System.lineSeparator();
+                        } else if (line.indexOf("JMeter") > 0) {
                             key += line;
                         } else {
-                            key += line+System.lineSeparator();
+                            key += line + System.lineSeparator();
                         }
                     }
                     wel = key;
@@ -78,17 +79,17 @@ public class LeeUtils {
         return wel;
     }
 
-    public void writeContent(String content,String name) {
-        String dir = JMeterUtils.getJMeterBinDir()+File.separator+name;
+    public void writeContent(String content, String name) {
+        String dir = JMeterUtils.getJMeterBinDir() + File.separator + name;
         FileWriter fw = null;
         BufferedWriter out = null;
         try {
-            fw = new FileWriter(dir,false);
+            fw = new FileWriter(dir, false);
             out = new BufferedWriter(fw);
             out.write(content);
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 assert out != null;
                 out.close();
@@ -104,9 +105,9 @@ public class LeeUtils {
     }
 
     public String readContent(String name) {
-        String fileDir = JMeterUtils.getJMeterBinDir()+File.separator+name;
+        String fileDir = JMeterUtils.getJMeterBinDir() + File.separator + name;
         File file = new File(fileDir);
-        if (!file.exists()){
+        if (!file.exists()) {
             try {
                 file.createNewFile();
             } catch (IOException e) {

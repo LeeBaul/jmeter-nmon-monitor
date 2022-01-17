@@ -17,7 +17,7 @@ import java.util.Set;
 public class AvgDataTag {
 
     /**
-     * @param map 即NmonDataLoader中的nmonTxxxxDataMap
+     * @param map         即NmonDataLoader中的nmonTxxxxDataMap
      * @param aaaColArray nmon文件AAA行的数据
      * @return
      */
@@ -58,7 +58,7 @@ public class AvgDataTag {
             String avgCpuUser = "0.000";
             double sumCpuUser = 0.0D;
             for (Double double1 : cpuUser) {
-                sumCpuUser += double1.doubleValue();
+                sumCpuUser += double1;
             }
             avgCpuUser = df.format(sumCpuUser / cpuUser.size());
 
@@ -66,7 +66,7 @@ public class AvgDataTag {
             String avgCpuSys = "0.000";
             double sumCpuSys = 0.0D;
             for (Double double2 : cpuSys) {
-                sumCpuSys += double2.doubleValue();
+                sumCpuSys += double2;
             }
             avgCpuSys = df.format(sumCpuSys / cpuSys.size());
 
@@ -74,7 +74,7 @@ public class AvgDataTag {
             String avgCpuWait = "0.000";
             double sumCpuWait = 0.0D;
             for (Double double3 : cpuWait) {
-                sumCpuWait += double3.doubleValue();
+                sumCpuWait += double3;
             }
             avgCpuWait = df.format(sumCpuWait / cpuWait.size());
 
@@ -115,7 +115,7 @@ public class AvgDataTag {
             String avgRunnable = "0.000";
             double sumRunnable = 0.0D;
             for (Double double1 : runnable) {
-                sumRunnable += double1.doubleValue();
+                sumRunnable += double1;
             }
             avgRunnable = df.format(sumRunnable / runnable.size());
 
@@ -123,7 +123,7 @@ public class AvgDataTag {
             String avgPswitch = "0.000";
             double sumPswitch = 0.0D;
             for (Double double2 : pswitch) {
-                sumPswitch += double2.doubleValue();
+                sumPswitch += double2;
             }
             avgPswitch = df.format(sumPswitch / pswitch.size());
 
@@ -131,7 +131,7 @@ public class AvgDataTag {
             String avgSyscall = "0.000";
             double sumSyscall = 0.0D;
             for (Double double3 : syscall) {
-                sumSyscall += double3.doubleValue();
+                sumSyscall += double3;
             }
             avgSyscall = df.format(sumSyscall / syscall.size());
 
@@ -162,7 +162,7 @@ public class AvgDataTag {
                 String avgRealFree = "0.000";
                 double sumRealFree = 0.0D;
                 for (Double double1 : realFree) {
-                    sumRealFree += double1.doubleValue();
+                    sumRealFree += double1;
                 }
                 avgRealFree = df.format(sumRealFree / realFree.size());
 
@@ -170,7 +170,7 @@ public class AvgDataTag {
                 String avgVirtualFree = "0.000";
                 double sumVirtualFree = 0.0D;
                 for (Double double2 : virtualFree) {
-                    sumVirtualFree += double2.doubleValue();
+                    sumVirtualFree += double2;
                 }
                 avgVirtualFree = df.format(sumVirtualFree / virtualFree.size());
 
@@ -178,7 +178,7 @@ public class AvgDataTag {
                 String avgRealTotal = "0.000";
                 double sumRealTotal = 0.0D;
                 for (Double double3 : realTotal) {
-                    sumRealTotal += double3.doubleValue();
+                    sumRealTotal += double3;
                 }
                 avgRealTotal = df.format(sumRealTotal / realTotal.size());
 
@@ -186,7 +186,7 @@ public class AvgDataTag {
                 String avgVirtualTotal = "0.000";
                 double sumVirtualTotal = 0.0D;
                 for (Double double4 : virtualTotal) {
-                    sumVirtualTotal += double4.doubleValue();
+                    sumVirtualTotal += double4;
                 }
                 avgVirtualTotal = df.format(sumVirtualTotal / virtualTotal.size());
 
@@ -219,7 +219,7 @@ public class AvgDataTag {
                 String avgProcess = "0.000";
                 double sumProcess = 0.0D;
                 for (Double double1 : process) {
-                    sumProcess += double1.doubleValue();
+                    sumProcess += double1;
                 }
                 avgProcess = df.format(sumProcess / process.size());
 
@@ -227,7 +227,7 @@ public class AvgDataTag {
                 String avgFScache = "0.000";
                 double sumFScache = 0.0D;
                 for (Double double2 : fScache) {
-                    sumFScache += double2.doubleValue();
+                    sumFScache += double2;
                 }
                 avgFScache = df.format(sumFScache / fScache.size());
 
@@ -235,7 +235,7 @@ public class AvgDataTag {
                 String avgSystem = "0.000";
                 double sumSystem = 0.0D;
                 for (Double double3 : system) {
-                    sumSystem += double3.doubleValue();
+                    sumSystem += double3;
                 }
                 avgSystem = df.format(sumSystem / system.size());
 
@@ -297,7 +297,7 @@ public class AvgDataTag {
                 String totalMemUse = "0.000";
                 double sumMemFree = 0.0D;
                 for (Double double1 : memFree) {
-                    sumMemFree += double1.doubleValue();
+                    sumMemFree += double1;
                 }
                 totalMemUse = df.format(100 - (sumMemFree / memFree.size()) / memTotal.get(0) * 100);//公式：100 - memfree平均值 /总内存*100
 
@@ -305,7 +305,7 @@ public class AvgDataTag {
                 String cachedPercent = "0.000";
                 double sumMemCached = 0.0D;
                 for (Double double2 : cached) {
-                    sumMemCached += double2.doubleValue();
+                    sumMemCached += double2;
                 }
                 cachedPercent = df.format((sumMemCached / cached.size()) / memTotal.get(0) * 100);//公式：100 - cached平均值 /总内存*100
 
@@ -313,7 +313,7 @@ public class AvgDataTag {
                 String buffersPercent = "0.000";
                 double sumMemBuffers = 0.0D;
                 for (Double double3 : buffers) {
-                    sumMemBuffers += double3.doubleValue();
+                    sumMemBuffers += double3;
                 }
                 buffersPercent = df.format((sumMemBuffers / buffers.size()) / memTotal.get(0) * 100);//公式：100 - buffers平均值 /总内存*100
 
@@ -377,7 +377,7 @@ public class AvgDataTag {
              */
             double sumDiskRead = 0.0D;
             for (Double double1 : diskRead) {
-                sumDiskRead += double1.doubleValue();
+                sumDiskRead += double1;
             }
             String avgDiskRead = df.format(sumDiskRead / diskRead.size());
             sb.append("------------------------------  Disk  ------------------------------\n")
@@ -401,7 +401,7 @@ public class AvgDataTag {
              */
             double sumDiskWrite = 0.0D;
             for (Double double2 : diskWrite) {
-                sumDiskWrite += double2.doubleValue();
+                sumDiskWrite += double2;
             }
             String avgDiskWrite = df.format(sumDiskWrite / diskWrite.size());
             sb.append("KB/s      TotalDiskWrite=").append(avgDiskWrite);
@@ -424,7 +424,7 @@ public class AvgDataTag {
              */
             double sumDiskXfer = 0.0D;
             for (Double double3 : diskXfer) {
-                sumDiskXfer += double3.doubleValue();
+                sumDiskXfer += double3;
             }
             String avgIO = df.format(sumDiskXfer / diskXfer.size());
             sb.append("KB/s      TotalDiskIO=").append(avgIO).append("\n");
@@ -465,7 +465,7 @@ public class AvgDataTag {
         String avgTemp = "0.000";
         double sumTemp = 0.0D;
         for (Double double1 : tempNetData) {
-            sumTemp += double1.doubleValue();
+            sumTemp += double1;
         }
         if (tempNetData.size() == 0) {
             avgTemp = df.format(0);

@@ -37,21 +37,22 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
     public static final String REQUEST = "NmonConfigExecuteSampler.requestData";
     public StringBuffer nmonFileStr;
     private boolean isFist = true;
+
     @Override
     public SampleResult sample(Entry entry) {
         LeeUtils agr = new LeeUtils();
         String pluginsShow = JMeterUtils.getProperty("baolu-jmeter-plugins");
-        if (StringUtils.isEmpty(pluginsShow)){
-            log.info("{}",agr.displayAsciiArt());
-            JMeterUtils.setProperty("baolu-jmeter-plugins","show");
+        if (StringUtils.isEmpty(pluginsShow)) {
+            log.info("{}", agr.displayAsciiArt());
+            JMeterUtils.setProperty("baolu-jmeter-plugins", "show");
         }
         log.info("开始校验NMON参数配置");
         if (getIsSlaveStart()) {
             JMeterUtils.setProperty("IF_SLAVE_START", "true");
-            String localHostIP  = JMeterUtils.getLocalHostIP();
+            String localHostIP = JMeterUtils.getLocalHostIP();
             String masterIp = getMasterIp();
             JMeterUtils.setProperty("nmonMasterIp", masterIp);//将masterIp 设置成属性值，供NmonFileAnalyseSampler使用
-            if (localHostIP.equals(masterIp)){//判断GUI页面填写的MasterIp是否为本机ip
+            if (localHostIP.equals(masterIp)) {//判断GUI页面填写的MasterIp是否为本机ip
                 finalRunCommand();
             }
         } else {
@@ -84,7 +85,7 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
         this.setProperty(INTERVAL, interval);
     }
 
-    public String getInterval(){
+    public String getInterval() {
         return getPropertyAsString(INTERVAL);
     }
 
@@ -92,7 +93,7 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
         setProperty(HOLD, hold);
     }
 
-    public String getHold(){
+    public String getHold() {
         return getPropertyAsString(HOLD);
     }
 
@@ -100,7 +101,7 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
         setProperty(FILE_NAME, fileName);
     }
 
-    public String getFileName(){
+    public String getFileName() {
         return getPropertyAsString(FILE_NAME);
     }
 
@@ -109,15 +110,15 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
         setProperty(MASTER_IP, fileName);
     }
 
-    public String getMasterIp(){
+    public String getMasterIp() {
         return getPropertyAsString(MASTER_IP);
     }
 
-    public void setIsSlaveStart(boolean selected){
+    public void setIsSlaveStart(boolean selected) {
         setProperty(IS_SLAVE_START, selected);
     }
 
-    public boolean getIsSlaveStart(){
+    public boolean getIsSlaveStart() {
         return getPropertyAsBoolean(IS_SLAVE_START);
     }
 
@@ -125,7 +126,7 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
         setProperty(NOTE, note);
     }
 
-    public String getNote(){
+    public String getNote() {
         return getPropertyAsString(NOTE);
     }
 
@@ -133,7 +134,7 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
         setProperty(REQUEST, request);
     }
 
-    public String getREQUEST(){
+    public String getREQUEST() {
         return getPropertyAsString(REQUEST);
     }
 
@@ -155,7 +156,7 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            StringBuffer sb;
+            StringBuilder sb;
             InputStream stdOut;
             InputStream stdErr;
             String outStr;
@@ -163,13 +164,13 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
             Integer count;
             String fileName;
             if ("Linux".equalsIgnoreCase(cols[3].replaceAll("\r", ""))) {
-                sb = new StringBuffer();
+                sb = new StringBuilder();
                 stdOut = null;
                 stdErr = null;
                 outStr = "";
                 outErr = "";
                 try {
-                    count = Integer.valueOf(getHold()) / Integer.valueOf(getInterval());
+                    count = Integer.parseInt(getHold()) / Integer.parseInt(getInterval());
                     fileName = getFileName() + "_" + getTimeStr() + "_" + cols[0] + ".nmon";
                     sb.append("./nmon -s ").append(getInterval()).append(" -c ").append(count).append(" -F ");
                     sb.append(fileName);
@@ -184,11 +185,11 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
 
                         nmonFileStr.append(str).append(",").append(fileName);
                     } else {
-                        log.error( cols[0] + " NMON 命令执行失败 " + outErr);
+                        log.error(cols[0] + " NMON 命令执行失败 " + outErr);
                     }
-                }catch (IOException e){
+                } catch (IOException e) {
                     e.printStackTrace();
-                }finally {
+                } finally {
                     if (session != null) {
                         session.close();
                     }
@@ -200,13 +201,13 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
             }
 
             if ("Aix".equalsIgnoreCase(cols[3].replaceAll("\r", ""))) {
-                sb = new StringBuffer();
+                sb = new StringBuilder();
                 stdOut = null;
                 stdErr = null;
                 outStr = "";
                 outErr = "";
                 try {
-                    count = Integer.valueOf(getHold()) / Integer.valueOf(getInterval());
+                    count = Integer.parseInt(getHold()) / Integer.parseInt(getInterval());
                     fileName = getFileName() + "_" + getTimeStr() + "_" + cols[0] + ".nmon";
                     sb.append("nmon  -s ").append(getInterval()).append(" -c ").append(count).append(" -F ");
                     sb.append(fileName);
@@ -220,11 +221,11 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
                         }
                         nmonFileStr.append(str).append(",").append(fileName);
                     } else {
-                        log.error( cols[0] +" NMON命令执行失败 " + outErr);
+                        log.error(cols[0] + " NMON命令执行失败 " + outErr);
                     }
-                }catch (IOException e){
+                } catch (IOException e) {
                     e.printStackTrace();
-                }finally {
+                } finally {
                     if (session != null) {
                         session.close();
                     }
@@ -233,13 +234,13 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
                     }
                 }
             }
-        }else {
-            log.error("服务器登录失败[{}]" ,cols[0] );
+        } else {
+            log.error("服务器登录失败[{}]", cols[0]);
         }
         return conSuc;
     }
 
-    private static String getTimeStr(){
+    private static String getTimeStr() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
         return sdf.format(new Date());
     }
@@ -247,16 +248,16 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
     /**
      * 执行nmon命令
      */
-    public void finalRunCommand(){
+    public void finalRunCommand() {
         String configMsg = getREQUEST();
         String[] arrTemp = configMsg.split("\n");
         List<String> list = new ArrayList<String>();
         nmonFileStr = new StringBuffer();
 
         for (String str : arrTemp) {//校验ui页面输入的格式
-            if(str.split(",").length==4){
+            if (str.split(",").length == 4) {
                 list.add(str);
-            }else{
+            } else {
                 log.error("NMON配置异常，请检查配置！");
             }
         }
@@ -267,7 +268,7 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
             loginExecuteCommand(str);
         }
 
-        log.info("当前产生的NMON文件[{}]" ,nmonFileStr.toString() );
+        log.info("当前产生的NMON文件[{}]", nmonFileStr.toString());
         JMeterUtils.setProperty("nmonFileNameStr", nmonFileStr.toString());
     }
 
@@ -275,17 +276,18 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
      * 对于master来说要先判断GUI页面配置的slave机ip
      * 是否在remote_hosts中，存在此地址设为属性值，
      * 不存在默认取remote_hosts首个ip
+     *
      * @param slave_ip 要执行NMON采样器的salve机ip
      * @return
      */
-    private static String retExistSavle(String slave_ip){
+    private static String retExistSavle(String slave_ip) {
         String remote_hosts = JMeterUtils.getProperty("remote_hosts");//获取slave机列表
         String[] ip_port = remote_hosts.split(",");
         String firstIp = ip_port[0].split(":")[0];
-        if (!"".equals(slave_ip) && slave_ip != null){
-            for (String temp : ip_port){
+        if (!"".equals(slave_ip) && slave_ip != null) {
+            for (String temp : ip_port) {
                 String ip = temp.split(":")[0];
-                if (ip.equals(slave_ip)){
+                if (ip.equals(slave_ip)) {
                     JMeterUtils.setProperty("NmonSlaveIp", slave_ip);
                     return slave_ip;
                 }

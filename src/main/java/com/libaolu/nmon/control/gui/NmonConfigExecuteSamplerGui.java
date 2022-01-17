@@ -47,14 +47,14 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui {
      */
     private JSyntaxTextArea configMsg;
 
-    private static final String ATTENTION = "1.本采样器必须放置setUp Thread Group中，单线执行1次\n"+
+    private static final String ATTENTION = "1.本采样器必须放置setUp Thread Group中，单线执行1次\n" +
             "2.确保被监控服务器上可以正常NMON，Linux操作系统可执行NMON文件，须放置当前登录用户目录\n" +
             "3.采样间隔、持续时间尽量采用整数型，生成文件名禁用中文\n" +
             "4.配置信息中必须使用ip,user,pwd,serverType格式，多台配置信息之间使用回车键分开，其中serverType可填Linux、AIX\n" +
             "5.JMeter压测采用非分布式模式，执行机IP填写本机ip，最终分析结果本机查看\n" +
             "6.JMeter压测采用分布式模式，执行机IP随机填写一台JMeter的slave机ip,最终分析结果执行机IP查看";
 
-    public NmonConfigExecuteSamplerGui(){
+    public NmonConfigExecuteSamplerGui() {
         init();
         initFields();
     }
@@ -159,7 +159,7 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui {
         super.configure(element);
         interval.setText(element.getPropertyAsString(NmonConfigExecuteSampler.INTERVAL));
         hold.setText(element.getPropertyAsString(NmonConfigExecuteSampler.HOLD));
-        isSlaveStart.setTristateFromProperty(element,NmonConfigExecuteSampler.IS_SLAVE_START);
+        isSlaveStart.setTristateFromProperty(element, NmonConfigExecuteSampler.IS_SLAVE_START);
         fileName.setText(element.getPropertyAsString(NmonConfigExecuteSampler.FILE_NAME));
         masterIp.setText(element.getPropertyAsString(NmonConfigExecuteSampler.MASTER_IP));
         note.setInitialText(element.getPropertyAsString(NmonConfigExecuteSampler.NOTE));
@@ -168,7 +168,7 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui {
         configMsg.setCaretPosition(0);
     }
 
-    public String getStaticLabel(){
+    public String getStaticLabel() {
         return "BaoLu NmonConfigExecute";
     }
 
@@ -187,13 +187,13 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui {
     @Override
     public void modifyTestElement(TestElement element) {
         super.configureTestElement(element);
-        element.setProperty(NmonConfigExecuteSampler.INTERVAL, interval.getText(),"");
-        element.setProperty(NmonConfigExecuteSampler.HOLD, hold.getText(),"");
+        element.setProperty(NmonConfigExecuteSampler.INTERVAL, interval.getText(), "");
+        element.setProperty(NmonConfigExecuteSampler.HOLD, hold.getText(), "");
         isSlaveStart.setPropertyFromTristate(element, NmonConfigExecuteSampler.IS_SLAVE_START);
-        element.setProperty(NmonConfigExecuteSampler.FILE_NAME, fileName.getText(),"");
-        element.setProperty(NmonConfigExecuteSampler.MASTER_IP, masterIp.getText(),"");
-        element.setProperty(NmonConfigExecuteSampler.NOTE, note.getText(),"");
-        element.setProperty(NmonConfigExecuteSampler.REQUEST, configMsg.getText(),"");
+        element.setProperty(NmonConfigExecuteSampler.FILE_NAME, fileName.getText(), "");
+        element.setProperty(NmonConfigExecuteSampler.MASTER_IP, masterIp.getText(), "");
+        element.setProperty(NmonConfigExecuteSampler.NOTE, note.getText(), "");
+        element.setProperty(NmonConfigExecuteSampler.REQUEST, configMsg.getText(), "");
     }
 
     public void clearGui() {
@@ -201,7 +201,7 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui {
         initFields();
     }
 
-    private void initFields(){
+    private void initFields() {
         interval.setText("");
         hold.setText("");
         fileName.setText("");
