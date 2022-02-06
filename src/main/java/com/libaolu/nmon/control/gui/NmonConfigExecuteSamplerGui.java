@@ -9,6 +9,9 @@ import org.apache.jmeter.gui.util.*;
 import org.apache.jmeter.samplers.gui.AbstractSamplerGui;
 import org.apache.jmeter.testelement.TestElement;
 import org.apache.jmeter.testelement.property.CollectionProperty;
+import org.apache.jmeter.testelement.property.JMeterProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.event.CellEditorListener;
@@ -28,6 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @dateTime 2020/1/22 15:04
  **/
 public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui implements TableModelListener, CellEditorListener {
+    private static final Logger log = LoggerFactory.getLogger(NmonConfigExecuteSamplerGui.class);
     /**
      * 采样间隔
      */
@@ -53,11 +57,6 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui implements T
      */
     private JTextField masterIp;
 
-    /**
-     * 配置信息
-     */
-    private JSyntaxTextArea configMsg;
-
     protected JTable grid;
 
     protected ButtonPanelAddCopyRemove buttons;
@@ -68,7 +67,7 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui implements T
 
     protected GraphPanelChart chart;
 
-    private static final String[] defaultValues = new String[] {"192.168.1.1", "admin", "admin","Linux"};
+    private static final String[] defaultValues = new String[] {"192.168.56.129", "root", "root","Linux"};
 
     protected static final String[] columnIdentifiers = new String[] { "ip", "username", "password" ,"serverType"};
 
@@ -194,7 +193,6 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui implements T
         return notePanel;
     }
 
-
     public void configure(TestElement element) {
         super.configure(element);
         interval.setText(element.getPropertyAsString(NmonConfigExecuteSampler.INTERVAL));
@@ -204,6 +202,18 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui implements T
         masterIp.setText(element.getPropertyAsString(NmonConfigExecuteSampler.MASTER_IP));
         note.setInitialText(element.getPropertyAsString(NmonConfigExecuteSampler.NOTE));
         note.setCaretPosition(0);
+        NmonConfigExecuteSampler nes = (NmonConfigExecuteSampler)element;
+        JMeterProperty threadValues = nes.getData();
+        if (threadValues instanceof org.apache.jmeter.testelement.property.NullProperty) {
+            log.warn("Received null property instead of collection");
+            return;
+        }
+        CollectionProperty columns = (CollectionProperty)threadValues;
+        this.tableModel.removeTableModelListener(this);
+        JMeterPluginsUtils.collectionPropertyToTableModelRows(columns, this.tableModel);
+        this.tableModel.addTableModelListener(this);
+        this.buttons.checkDeleteButtonStatus();
+        updateUI();
     }
 
     public String getStaticLabel() {
@@ -249,7 +259,7 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui implements T
         interval.setText("");
         hold.setText("");
         fileName.setText("");
-        masterIp.setText("");
+        masterIp.setText("${__machineIP()}");
         isSlaveStart.setSelected(false);
         note.setText(ATTENTION);
     }
@@ -274,7 +284,6 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui implements T
         if (this.tableModel != null) {
             NmonConfigExecuteSampler utgForPreview = new NmonConfigExecuteSampler();
             utgForPreview.setData(JMeterPluginsUtils.tableModelRowsToCollectionPropertyEval(this.tableModel, NmonConfigExecuteSampler.DATA_PROPERTY));
-//            updateChart(utgForPreview);
         }
     }
 }
