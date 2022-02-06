@@ -28,17 +28,23 @@
       <hashTree>
         <com.libaolu.nmon.sampler.NmonConfigExecuteSampler guiclass="com.libaolu.nmon.control.gui.NmonConfigExecuteSamplerGui" testclass="com.libaolu.nmon.sampler.NmonConfigExecuteSampler" testname="BaoLu NmonConfigExecute" enabled="true">
           <boolProp name="NmonConfigExecuteSampler.isSlaveStart">false</boolProp>
-          <stringProp name="NmonConfigExecuteSampler.note">1.本采样器必须放置setUp Thread Group中，单线执行1次
-2.确保被监控服务器上可以正常NMON，Linux操作系统可执行NMON文件，须放置当前登录用户目录
-3.采样间隔、持续时间尽量采用整数型，生成文件名禁用中文
-4.配置信息中必须使用ip,user,pwd,serverType格式，多台配置信息之间使用回车键分开，其中serverType可填Linux、AIX
-5.JMeter压测采用非分布式模式，执行机IP填写本机ip，最终分析结果本机查看
-6.JMeter压测采用分布式模式，执行机IP随机填写一台JMeter的slave机ip,最终分析结果执行机IP查看</stringProp>
-          <stringProp name="NmonConfigExecuteSampler.requestData">192.168.39.134,libaolu,P@ssw1rd,linux</stringProp>
-          <stringProp name="NmonConfigExecuteSampler.interval">5</stringProp>
-          <stringProp name="NmonConfigExecuteSampler.hold">1</stringProp>
-          <stringProp name="NmonConfigExecuteSampler.fileName">libaolu</stringProp>
           <stringProp name="NmonConfigExecuteSampler.masterIp">${__machineIP()}</stringProp>
+          <stringProp name="NmonConfigExecuteSampler.note">本采样器必须放置setUp Thread Group中，单线执行1次
+确保被监控服务器上可以正常NMON，Linux操作系统可执行NMON文件，须放置当前登录用户目录
+采样间隔、持续时间尽量采用整数型，生成文件名禁用中文
+JMeter压测采用非分布式模式，执行机IP填写本机ip，最终分析结果本机查看
+JMeter压测采用分布式模式，执行机IP随机填写一台JMeter的slave机ip,最终分析结果执行机IP查看</stringProp>
+          <collectionProp name="load_nmon_profile">
+            <collectionProp name="-1671758297">
+              <stringProp name="956854890">192.168.56.129</stringProp>
+              <stringProp name="3506402">root</stringProp>
+              <stringProp name="3506402">root</stringProp>
+              <stringProp name="73425108">Linux</stringProp>
+            </collectionProp>
+          </collectionProp>
+          <stringProp name="NmonConfigExecuteSampler.interval">2</stringProp>
+          <stringProp name="NmonConfigExecuteSampler.hold">20</stringProp>
+          <stringProp name="NmonConfigExecuteSampler.fileName">libaolu</stringProp>
         </com.libaolu.nmon.sampler.NmonConfigExecuteSampler>
         <hashTree/>
       </hashTree>
@@ -46,12 +52,12 @@
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <intProp name="LoopController.loops">-1</intProp>
+          <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
-        <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">60</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
