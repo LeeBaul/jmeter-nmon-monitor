@@ -8,6 +8,9 @@ import org.apache.jmeter.samplers.AbstractSampler;
 import org.apache.jmeter.samplers.Entry;
 import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jmeter.testelement.TestStateListener;
+import org.apache.jmeter.testelement.property.CollectionProperty;
+import org.apache.jmeter.testelement.property.JMeterProperty;
+import org.apache.jmeter.testelement.property.PropertyIterator;
 import org.apache.jmeter.util.JMeterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +40,9 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
     public static final String REQUEST = "NmonConfigExecuteSampler.requestData";
     public StringBuffer nmonFileStr;
     private boolean isFist = true;
+    private CollectionProperty overrideProp;
+    public static final String DATA_PROPERTY = "load_nmon_profile";
+    public static final String DELIMITER = ",";
 
     @Override
     public SampleResult sample(Entry entry) {
@@ -46,7 +52,6 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
             log.info("{}", agr.displayAsciiArt());
             JMeterUtils.setProperty("baolu-jmeter-plugins", "show");
         }
-        log.info("开始校验NMON参数配置");
         if (getIsSlaveStart()) {
             JMeterUtils.setProperty("IF_SLAVE_START", "true");
             String localHostIP = JMeterUtils.getLocalHostIP();
@@ -249,25 +254,20 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
      * 执行nmon命令
      */
     public void finalRunCommand() {
-        String configMsg = getREQUEST();
-        String[] arrTemp = configMsg.split("\n");
-        List<String> list = new ArrayList<String>();
+        JMeterProperty data = getData();
+        CollectionProperty rows = (CollectionProperty)data;
+        PropertyIterator scheduleIT = rows.iterator();
+        List<String> list = new ArrayList<>();
         nmonFileStr = new StringBuffer();
-
-        for (String str : arrTemp) {//校验ui页面输入的格式
-            if (str.split(",").length == 4) {
-                list.add(str);
-            } else {
-                log.error("NMON配置异常，请检查配置！");
-            }
+        while (scheduleIT.hasNext()) {
+            List<Object> curProp = (List<Object>)scheduleIT.next().getObjectValue();
+            String serverConfig = getStringValue(curProp, 0) + DELIMITER + getStringValue(curProp, 1) + DELIMITER + getStringValue(curProp, 2)
+                    + DELIMITER + getStringValue(curProp, 3);
+            list.add(serverConfig);
         }
-
-        log.info("结束校验NMON参数配置");
-        //循环执行命名
-        for (String str : list) {
-            loginExecuteCommand(str);
+        for (String serverConfig : list) {
+            loginExecuteCommand(serverConfig);
         }
-
         log.info("当前产生的NMON文件[{}]", nmonFileStr.toString());
         JMeterUtils.setProperty("nmonFileNameStr", nmonFileStr.toString());
     }
@@ -295,5 +295,20 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
         }
         JMeterUtils.setProperty("NmonSlaveIp", firstIp);
         return firstIp;
+    }
+
+    public void setData(CollectionProperty rows) {
+        setProperty((JMeterProperty)rows);
+    }
+
+    public JMeterProperty getData() {
+        if (this.overrideProp != null)
+            return (JMeterProperty)this.overrideProp;
+        return getProperty(DATA_PROPERTY);
+    }
+
+    private String getStringValue(List<Object> prop, int colID) {
+        JMeterProperty val = (JMeterProperty)prop.get(colID);
+        return val.getStringValue();
     }
 }

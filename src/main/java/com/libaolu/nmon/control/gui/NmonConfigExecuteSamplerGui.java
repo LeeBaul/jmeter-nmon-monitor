@@ -1,12 +1,23 @@
 package com.libaolu.nmon.control.gui;
 
 import com.libaolu.nmon.sampler.NmonConfigExecuteSampler;
+import kg.apc.charting.AbstractGraphRow;
+import kg.apc.charting.GraphPanelChart;
+import kg.apc.jmeter.JMeterPluginsUtils;
+import kg.apc.jmeter.gui.ButtonPanelAddCopyRemove;
 import org.apache.jmeter.gui.util.*;
 import org.apache.jmeter.samplers.gui.AbstractSamplerGui;
 import org.apache.jmeter.testelement.TestElement;
+import org.apache.jmeter.testelement.property.CollectionProperty;
 
 import javax.swing.*;
+import javax.swing.event.CellEditorListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableModel;
 import java.awt.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -16,7 +27,7 @@ import java.awt.*;
  * @version 1.0
  * @dateTime 2020/1/22 15:04
  **/
-public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui {
+public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui implements TableModelListener, CellEditorListener {
     /**
      * 采样间隔
      */
@@ -47,24 +58,37 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui {
      */
     private JSyntaxTextArea configMsg;
 
+    protected JTable grid;
+
+    protected ButtonPanelAddCopyRemove buttons;
+
+    protected PowerTableModel tableModel;
+
+    protected ConcurrentHashMap<String, AbstractGraphRow> model;
+
+    protected GraphPanelChart chart;
+
+    private static final String[] defaultValues = new String[] {"192.168.1.1", "admin", "admin","Linux"};
+
+    protected static final String[] columnIdentifiers = new String[] { "ip", "username", "password" ,"serverType"};
+
+    protected static final Class[] columnClasses = new Class[] { String.class, String.class, String.class ,String.class};
+
     private static final String ATTENTION = "1.本采样器必须放置setUp Thread Group中，单线执行1次\n" +
             "2.确保被监控服务器上可以正常NMON，Linux操作系统可执行NMON文件，须放置当前登录用户目录\n" +
             "3.采样间隔、持续时间尽量采用整数型，生成文件名禁用中文\n" +
-            "4.配置信息中必须使用ip,user,pwd,serverType格式，多台配置信息之间使用回车键分开，其中serverType可填Linux、AIX\n" +
-            "5.JMeter压测采用非分布式模式，执行机IP填写本机ip，最终分析结果本机查看\n" +
-            "6.JMeter压测采用分布式模式，执行机IP随机填写一台JMeter的slave机ip,最终分析结果执行机IP查看";
+            "4.JMeter压测采用非分布式模式，执行机IP填写本机ip，最终分析结果本机查看\n" +
+            "5.JMeter压测采用分布式模式，执行机IP随机填写一台JMeter的slave机ip,最终分析结果执行机IP查看";
 
     public NmonConfigExecuteSamplerGui() {
         init();
         initFields();
     }
 
-
-    private void init() {
-        setLayout(new BorderLayout(0, 5));
+    protected void init() {
+        setLayout(new BorderLayout());
         setBorder(makeBorder());
-        add(makeTitlePanel(), "North");
-        VerticalPanel mainPanel = new VerticalPanel();
+        VerticalPanel verticalPanel = new VerticalPanel();
         HorizontalPanel optionsPanel = new HorizontalPanel();
         optionsPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder()));
         optionsPanel.add(createIntervalOption());
@@ -72,15 +96,42 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui {
         optionsPanel.add(createFileNameOption());
         optionsPanel.add(createSlaveIpOption());
         optionsPanel.add(createIsSlaveStartOption());
-        mainPanel.add(optionsPanel);
-        mainPanel.add(createNotePanel());
-        mainPanel.add(createRequestPanel());
-        add(mainPanel, BorderLayout.CENTER);
+        verticalPanel.add(optionsPanel);
+        verticalPanel.add(createNotePanel());
+        verticalPanel.add(createParamsPanel());
+        add((Component)verticalPanel, BorderLayout.CENTER);
+    }
+
+    private JPanel createParamsPanel() {
+        JPanel panel = new JPanel(new BorderLayout(5, 5));
+        panel.setBorder(BorderFactory.createTitledBorder("server config message"));
+        panel.setPreferredSize(new Dimension(280, 280));
+        JScrollPane scroll = new JScrollPane(createGrid());
+        scroll.setPreferredSize(scroll.getMinimumSize());
+        panel.add(scroll, BorderLayout.CENTER);
+        this.buttons = new ButtonPanelAddCopyRemove(this.grid, this.tableModel, (Object[])defaultValues);
+        panel.add((Component)this.buttons, BorderLayout.SOUTH);
+        return panel;
+    }
+
+    private JTable createGrid() {
+        this.grid = new JTable();
+        this.grid.getDefaultEditor(String.class).addCellEditorListener(this);
+        createTableModel();
+        this.grid.setSelectionMode(0);
+        this.grid.setMinimumSize(new Dimension(50, 50));
+        return this.grid;
+    }
+
+    private void createTableModel() {
+        this.tableModel = new PowerTableModel(NmonConfigExecuteSamplerGui.columnIdentifiers, NmonConfigExecuteSamplerGui.columnClasses);
+        this.tableModel.addTableModelListener(this);
+        this.grid.setModel((TableModel)this.tableModel);
     }
 
     private JPanel createIntervalOption() {
-        JLabel label = new JLabel("采样间隔");
-        interval = new JTextField(8);
+        JLabel label = new JLabel("Interval");
+        interval = new JTextField(4);
         interval.setMaximumSize(new Dimension(interval.getPreferredSize()));
         label.setLabelFor(interval);
         JPanel intervalPanel = new JPanel(new FlowLayout());
@@ -90,8 +141,8 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui {
     }
 
     private JPanel createHoldOption() {
-        JLabel label = new JLabel("持续时间");
-        hold = new JTextField(8);
+        JLabel label = new JLabel("During");
+        hold = new JTextField(4);
         hold.setMaximumSize(new Dimension(hold.getPreferredSize()));
         label.setLabelFor(hold);
         JPanel holdPanel = new JPanel(new FlowLayout());
@@ -101,8 +152,8 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui {
     }
 
     private JPanel createFileNameOption() {
-        JLabel label = new JLabel("文件名");
-        fileName = new JTextField(18);
+        JLabel label = new JLabel("Filename");
+        fileName = new JTextField(10);
         fileName.setMaximumSize(new Dimension(fileName.getPreferredSize()));
         label.setLabelFor(fileName);
         JPanel fileNamePanel = new JPanel(new FlowLayout());
@@ -112,8 +163,8 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui {
     }
 
     private JPanel createSlaveIpOption() {
-        JLabel label = new JLabel("执行机IP");
-        masterIp = new JTextField(18);
+        JLabel label = new JLabel("Run IP");
+        masterIp = new JTextField(10);
         masterIp.setMaximumSize(new Dimension(masterIp.getPreferredSize()));
         label.setLabelFor(masterIp);
         JPanel slaveIpPanel = new JPanel(new FlowLayout());
@@ -123,7 +174,7 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui {
     }
 
     private JPanel createIsSlaveStartOption() {
-        JLabel label = new JLabel("分布式模式"); // $NON-NLS-1$
+        JLabel label = new JLabel("Slave Mode"); // $NON-NLS-1$
         isSlaveStart = new TristateCheckBox();
         JPanel isSlavePanel = new JPanel(new FlowLayout());
         isSlavePanel.add(label);
@@ -132,8 +183,8 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui {
     }
 
     private JPanel createNotePanel() {
-        JLabel reqLabel = new JLabel("注意事项");
-        note = JSyntaxTextArea.getInstance(7, 10);
+        JLabel reqLabel = new JLabel("Note");
+        note = JSyntaxTextArea.getInstance(6, 10);
         note.setLanguage("text");
         reqLabel.setLabelFor(note);
         JPanel notePanel = new JPanel(new BorderLayout(5, 0));
@@ -143,17 +194,6 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui {
         return notePanel;
     }
 
-    private JPanel createRequestPanel() {
-        JLabel reqLabel = new JLabel("配置信息");
-        configMsg = JSyntaxTextArea.getInstance(16, 20);
-        configMsg.setLanguage("text");
-        reqLabel.setLabelFor(configMsg);
-        JPanel reqDataPanel = new JPanel(new BorderLayout(5, 0));
-        reqDataPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder()));
-        reqDataPanel.add(reqLabel, BorderLayout.WEST);
-        reqDataPanel.add(JTextScrollPane.getInstance(configMsg), BorderLayout.CENTER);
-        return reqDataPanel;
-    }
 
     public void configure(TestElement element) {
         super.configure(element);
@@ -164,8 +204,6 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui {
         masterIp.setText(element.getPropertyAsString(NmonConfigExecuteSampler.MASTER_IP));
         note.setInitialText(element.getPropertyAsString(NmonConfigExecuteSampler.NOTE));
         note.setCaretPosition(0);
-        configMsg.setInitialText(element.getPropertyAsString(NmonConfigExecuteSampler.REQUEST));
-        configMsg.setCaretPosition(0);
     }
 
     public String getStaticLabel() {
@@ -193,12 +231,18 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui {
         element.setProperty(NmonConfigExecuteSampler.FILE_NAME, fileName.getText(), "");
         element.setProperty(NmonConfigExecuteSampler.MASTER_IP, masterIp.getText(), "");
         element.setProperty(NmonConfigExecuteSampler.NOTE, note.getText(), "");
-        element.setProperty(NmonConfigExecuteSampler.REQUEST, configMsg.getText(), "");
+        if (element instanceof NmonConfigExecuteSampler){
+            NmonConfigExecuteSampler nes = (NmonConfigExecuteSampler)element;
+            CollectionProperty rows = JMeterPluginsUtils.tableModelRowsToCollectionProperty(this.tableModel, NmonConfigExecuteSampler.DATA_PROPERTY);
+            nes.setData(rows);
+        }
     }
 
     public void clearGui() {
         super.clearGui();
         initFields();
+        this.tableModel.clearData();
+        this.tableModel.fireTableDataChanged();
     }
 
     private void initFields() {
@@ -208,7 +252,29 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui {
         masterIp.setText("");
         isSlaveStart.setSelected(false);
         note.setText(ATTENTION);
-        configMsg.setText("hi guys write nmon server config data here");
     }
 
+    @Override
+    public void editingStopped(ChangeEvent e) {
+        updateUI();
+    }
+
+    @Override
+    public void editingCanceled(ChangeEvent e) {
+
+    }
+
+    @Override
+    public void tableChanged(TableModelEvent e) {
+        updateUI();
+    }
+
+    public void updateUI() {
+        super.updateUI();
+        if (this.tableModel != null) {
+            NmonConfigExecuteSampler utgForPreview = new NmonConfigExecuteSampler();
+            utgForPreview.setData(JMeterPluginsUtils.tableModelRowsToCollectionPropertyEval(this.tableModel, NmonConfigExecuteSampler.DATA_PROPERTY));
+//            updateChart(utgForPreview);
+        }
+    }
 }
