@@ -309,6 +309,6 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
 
     private String getStringValue(List<Object> prop, int colID) {
         JMeterProperty val = (JMeterProperty)prop.get(colID);
-        return val.getStringValue();
+        return val.getStringValue().trim();
     }
 }
