@@ -23,7 +23,7 @@ public class NmonFileAnalyseSamplerGui extends AbstractSamplerGui {
      * 注意事项
      */
     private JSyntaxTextArea noteMsg;
-    private static final String ATTENTION_1 = "1.本采样器必须放置tearDown Thread Group中，单线执行1次\n" + "2.NMON解析结果可在console/jmeter.log/jmeter-server.log中查看\n" + "3.原始NMON结果文件保存在JMeter/bin/nmonTemp目录下";
+    private static final String ATTENTION_1 = "本采样器必须放置tearDown Thread Group中，单线执行1次\n" + "NMON解析结果可在console/jmeter.log/jmeter-server.log中查看\n" + "原始NMON结果文件保存在JMeter/bin/nmonTemp目录下";
 
     public NmonFileAnalyseSamplerGui() {
         init();
