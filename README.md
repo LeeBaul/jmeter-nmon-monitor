@@ -7,7 +7,8 @@ JMeter Nmon 监控工具用来监控Linux 、Aix系统资源消耗，在场景�
 
 1. git clone https://gitee.com/LeeBaul/jmeter-nmon-monitor.git
 2. mvn package
-3. copy baolu-nmon-monitor.xxx.jar to ${JMETER_HOME}/lib/ext
+3. copy baolu-nmon-monitor.xxx.jar to ${JMETER_HOME}/lib/ext folder
+4. restarting the JMeter, you can see "BaoLu NmonFileAnalyse、BaoLu NmonConfigExecute" in JMeter's Sampler
 
 #### 版本说明
 v2.1.3 首版<br>
@@ -33,7 +34,10 @@ v2.1.4 全新GUI页面，测试人员更友好的配置服务器信息
 ![输入图片说明](src/main/resources/banner/image04.png)
 
 ![输入图片说明](src/main/resources/banner/image02.png)
-  
+
+插件详细使用说明请参考：</br>
+1.https://mp.weixin.qq.com/s/cpEnHYxm4D_LtcPmRBSHWw </br>
+2.https://www.cnblogs.com/leebaul/p/12830645.html
 
 #### 参与贡献
 
