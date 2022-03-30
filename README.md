@@ -35,7 +35,7 @@ v2.1.4 全新GUI页面，测试人员更友好的配置服务器信息
 
 ![输入图片说明](src/main/resources/banner/image02.png)
 
-插件详细使用说明请参考：</br>
+插件详细使用说明请参考：<br/>
 1.https://mp.weixin.qq.com/s/cpEnHYxm4D_LtcPmRBSHWw </br>
 2.https://www.cnblogs.com/leebaul/p/12830645.html
 
