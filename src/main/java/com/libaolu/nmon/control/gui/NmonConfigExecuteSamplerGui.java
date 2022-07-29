@@ -74,10 +74,10 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui implements T
     protected static final Class[] columnClasses = new Class[] { String.class, String.class, String.class ,String.class};
 
     private static final String ATTENTION = "本采样器必须放置setUp Thread Group中，单线执行1次\n" +
-            "确保被监控服务器上可以正常NMON，Linux操作系统可执行NMON文件，须放置当前登录用户目录\n" +
-            "采样间隔、持续时间尽量采用整数型，生成文件名禁用中文\n" +
+            "确保被监控服务器上可以正常执行NMON，Linux操作系统可执行NMON文件，须放置当前登录用户目录\n" +
+            "采样间隔、持续时间尽量采用整数型，NMON结果文件名建议使用英文\n" +
             "JMeter压测采用非分布式模式，执行机IP填写本机ip，最终分析结果本机查看\n" +
-            "JMeter压测采用分布式模式，执行机IP随机填写一台JMeter的slave机ip,最终分析结果执行机IP查看";
+            "JMeter压测采用分布式模式，执行机IP随机填写一台JMeter的slave机ip,最终分析结果执行机查看";
 
     public NmonConfigExecuteSamplerGui() {
         init();
