@@ -78,7 +78,7 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
 
     @Override
     public void testEnded() {
-        log.info("NMON命令执行结束");
+        log.info("nmon command execution ends");
     }
 
     @Override
@@ -190,7 +190,7 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
 
                         nmonFileStr.append(str).append(",").append(fileName);
                     } else {
-                        log.error(cols[0] + " NMON 命令执行失败 " + outErr);
+                        log.error(cols[0] + " nmon command execution failed " + outErr);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -226,7 +226,7 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
                         }
                         nmonFileStr.append(str).append(",").append(fileName);
                     } else {
-                        log.error(cols[0] + " NMON命令执行失败 " + outErr);
+                        log.error(cols[0] + " nmon command execution failed " + outErr);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -234,13 +234,11 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
                     if (session != null) {
                         session.close();
                     }
-                    if (conn != null) {
-                        conn.close();
-                    }
+                    conn.close();
                 }
             }
         } else {
-            log.error("服务器登录失败[{}]", cols[0]);
+            log.error("server login failed [{}]", cols[0]);
         }
         return conSuc;
     }
@@ -268,7 +266,7 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
         for (String serverConfig : list) {
             loginExecuteCommand(serverConfig);
         }
-        log.info("当前产生的NMON文件[{}]", nmonFileStr.toString());
+        log.info("current make nmon file [{}]", nmonFileStr.toString());
         JMeterUtils.setProperty("nmonFileNameStr", nmonFileStr.toString());
     }
 
