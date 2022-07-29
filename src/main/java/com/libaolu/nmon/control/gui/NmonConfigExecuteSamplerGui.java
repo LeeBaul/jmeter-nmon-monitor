@@ -217,7 +217,7 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui implements T
     }
 
     public String getStaticLabel() {
-        return "BaoLu NmonConfigExecute";
+        return "Baolu NmonConfigExecute";
     }
 
     @Override
