@@ -152,7 +152,7 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui implements T
 
     private JPanel createFileNameOption() {
         JLabel label = new JLabel("Filename");
-        fileName = new JTextField(10);
+        fileName = new JTextField(20);
         fileName.setMaximumSize(new Dimension(fileName.getPreferredSize()));
         label.setLabelFor(fileName);
         JPanel fileNamePanel = new JPanel(new FlowLayout());
