@@ -87,6 +87,7 @@ public class NmonConfigExecuteSamplerGui extends AbstractSamplerGui implements T
     protected void init() {
         setLayout(new BorderLayout());
         setBorder(makeBorder());
+        add(makeTitlePanel(), "North");
         VerticalPanel verticalPanel = new VerticalPanel();
         HorizontalPanel optionsPanel = new HorizontalPanel();
         optionsPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder()));
