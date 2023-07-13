@@ -15,6 +15,7 @@ v2.1.3 首版<br>
 v2.1.4 全新GUI页面，测试人员更友好的配置服务器信息<br>
 v2.1.5 修改samplerLabel，优化展示术语
 v2.1.6 调整FileName优化输入框大小
+v2.1.7 NmonConfigExecuteSamplerGui增加Label
 #### 使用说明
 
 1.   **BaoLu NmonConfigExecute** 
