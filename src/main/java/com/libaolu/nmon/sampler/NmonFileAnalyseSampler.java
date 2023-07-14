@@ -287,20 +287,16 @@ public class NmonFileAnalyseSampler extends AbstractSampler implements TestState
         } catch (IOException var22) {
             var22.printStackTrace();
         } finally {
-            if (bu2ferReader != null) {
-                try {
-                    bu2ferReader.close();
-                } catch (IOException var20) {
-                    var20.printStackTrace();
-                }
+            try {
+                bu2ferReader.close();
+            } catch (IOException var20) {
+                var20.printStackTrace();
             }
 
-            if (fileReader != null) {
-                try {
-                    fileReader.close();
-                } catch (IOException var19) {
-                    var19.printStackTrace();
-                }
+            try {
+                fileReader.close();
+            } catch (IOException var19) {
+                var19.printStackTrace();
             }
 
         }

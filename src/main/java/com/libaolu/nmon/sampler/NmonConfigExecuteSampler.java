@@ -198,9 +198,7 @@ public class NmonConfigExecuteSampler extends AbstractSampler implements TestSta
                     if (session != null) {
                         session.close();
                     }
-                    if (conn != null) {
-                        conn.close();
-                    }
+                    conn.close();
                 }
 
             }
