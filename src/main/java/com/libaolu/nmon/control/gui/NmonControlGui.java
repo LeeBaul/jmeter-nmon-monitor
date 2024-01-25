@@ -320,7 +320,8 @@ public class NmonControlGui extends LogicControllerGui
     public void updateUI() {
         super.updateUI();
         if (this.tableModel != null) {
-            nmonControl.setData(JMeterPluginsUtils.tableModelRowsToCollectionPropertyEval(this.tableModel, NmonControl.DATA_PROPERTY));
+            NmonControl nc = new NmonControl();
+            nc.setData(JMeterPluginsUtils.tableModelRowsToCollectionPropertyEval(this.tableModel, NmonControl.DATA_PROPERTY));
         }
     }
 
