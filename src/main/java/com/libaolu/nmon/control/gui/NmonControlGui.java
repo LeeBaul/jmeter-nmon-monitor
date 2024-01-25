@@ -1,7 +1,6 @@
 package com.libaolu.nmon.control.gui;
 
 import com.libaolu.nmon.control.NmonControl;
-import com.libaolu.nmon.sampler.NmonConfigExecuteSampler;
 import kg.apc.jmeter.JMeterPluginsUtils;
 import kg.apc.jmeter.gui.ButtonPanelAddCopyRemove;
 import org.apache.jmeter.control.gui.LogicControllerGui;
@@ -19,7 +18,6 @@ import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -130,7 +128,7 @@ public class NmonControlGui extends LogicControllerGui
         JScrollPane scroll = new JScrollPane(createGrid());
         scroll.setPreferredSize(scroll.getMinimumSize());
         panel.add(scroll, BorderLayout.CENTER);
-        this.buttons = new ButtonPanelAddCopyRemove(this.grid, this.tableModel, (Object[])defaultValues);
+        this.buttons = new ButtonPanelAddCopyRemove(this.grid, this.tableModel, defaultValues);
         panel.add(this.buttons, BorderLayout.SOUTH);
         return panel;
     }
@@ -322,8 +320,7 @@ public class NmonControlGui extends LogicControllerGui
     public void updateUI() {
         super.updateUI();
         if (this.tableModel != null) {
-            NmonConfigExecuteSampler utgForPreview = new NmonConfigExecuteSampler();
-            utgForPreview.setData(JMeterPluginsUtils.tableModelRowsToCollectionPropertyEval(this.tableModel, NmonConfigExecuteSampler.DATA_PROPERTY));
+            nmonControl.setData(JMeterPluginsUtils.tableModelRowsToCollectionPropertyEval(this.tableModel, NmonControl.DATA_PROPERTY));
         }
     }
 
