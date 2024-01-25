@@ -48,10 +48,6 @@ public class NmonControlGui extends LogicControllerGui
      */
     private TristateCheckBox isSlaveStart;
     /**
-     * 使用说明
-     */
-    private JSyntaxTextArea note;
-    /**
      * 文件名
      */
     private JTextField fileName;
