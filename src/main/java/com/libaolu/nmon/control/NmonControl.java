@@ -301,7 +301,7 @@ public class NmonControl extends AbstractTestElement {
         String[] arrNmonMsg = JMeterUtils.getProperty("nmon_server_Config_Msg").split("&@&@");
         for (String nmonMsgStr : arrNmonMsg) {
             String[] arrTemp = nmonMsgStr.split(",");
-            log.error(Arrays.toString(arrTemp));
+            log.info(Arrays.toString(arrTemp));
             try {
                 JSch jsch = new JSch();
                 session = jsch.getSession(arrTemp[1], arrTemp[0], 22);
